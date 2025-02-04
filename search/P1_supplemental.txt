@@ -1,6 +1,10 @@
 Answer questions marked as "QS"
 
 QS1.1:
+- For DFS, you implement it using a stack. This is because we want to follow the LIFO style,
+which explores nodes that are most recently added. this means that when you go down one level,
+then add a node, you will explore that node, then the one below it. first however, you expand the 
+both of the nodes children.
 
 
 QS1.2:

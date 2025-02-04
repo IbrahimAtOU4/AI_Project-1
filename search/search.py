@@ -87,16 +87,118 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    #DFS
+    # initialize stack and visited set
+    fringe = util.Stack()
+    closed = set()
+
+    # set the initial state and add to fringe
+    initial_state = problem.getStartState()
+    initial_actions = [] # an empty array, initially no actions have been performed
+    fringe.push((initial_state, initial_actions)) # ((x,y), [array of actions]) 
+
+    # loop 
+    while True:
+        # check if all explored
+        if fringe.isEmpty():
+            return []
+        
+        # get current state and path
+        current_state, path = fringe.pop()
+
+        # check if our current state is the goal
+        if (problem.isGoalState(current_state)):
+            return path
+
+        # add this state to the closed note
+        if current_state not in closed:
+            closed.add(current_state)
+
+        # push all successors of this state to the fringe
+        for successor, new_path, cost in problem.getSuccessors(current_state):
+            if successor not in closed:
+                fringe.push((successor, (path + [new_path])))
+                # closed.add(successor) # works without this?
+ 
     util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    #BFS
+    # initialize queue and visited set
+    fringe = util.Queue()
+    closed = set()
+
+    # set the initial state and add to fringe
+    initial_state = problem.getStartState()
+    initial_actions = [] # an empty array, initially no actions have been performed
+    fringe.push((initial_state, initial_actions)) # ((x,y), [array of actions]) 
+
+    # loop 
+    while True:
+        # check if all explored
+        if fringe.isEmpty():
+            return []
+        
+        # get current state and path
+        current_state, path = fringe.pop()
+
+        # check if our current state is the goal
+        if (problem.isGoalState(current_state)):
+            return path
+
+        # add this state to the closed note
+        if current_state not in closed:
+            closed.add(current_state)
+
+        # push all successors of this state to the fringe
+        for successor, new_path, cost in problem.getSuccessors(current_state):
+            if successor not in closed:
+                fringe.push((successor, (path + [new_path])))
+                closed.add(successor)
+    
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    # UCS
+    # initialize queue and visited set
+    fringe = util.PriorityQueue()
+    closed = set()
+
+    # set the initial state and add to fringe
+    initial_state = problem.getStartState()
+    initial_actions = [] # an empty array, initially no actions have been performed
+    initial_cost = 0
+    fringe.update((initial_state, initial_actions), initial_cost) # ((x,y), [array of actions]) 
+
+    # loop 
+    while True:
+        # check if all explored
+        if fringe.isEmpty():
+            return []
+        
+        # get current state and path
+        (current_state, path) = fringe.pop()
+
+        # check if our current state is the goal
+        if (problem.isGoalState(current_state)):
+            return path
+
+        # add this state to the closed note
+        if current_state not in closed:
+            closed.add(current_state)
+
+        # push all successors of this state to the fringe
+        for successor, new_path, new_cost in problem.getSuccessors(current_state):
+            if successor not in closed:
+                successor_path = path + [new_path]
+                fringe.update((successor, (path + [new_path])), problem.getCostOfActions(path+[new_path]))
+                closed.add(successor)
+    
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
