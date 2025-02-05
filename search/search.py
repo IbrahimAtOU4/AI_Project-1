@@ -61,7 +61,6 @@ class SearchProblem:
         """
         util.raiseNotDefined()
 
-
 def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -122,7 +121,6 @@ def depthFirstSearch(problem: SearchProblem):
  
     util.raiseNotDefined()
 
-
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
@@ -163,17 +161,15 @@ def breadthFirstSearch(problem: SearchProblem):
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    # UCS
     # initialize queue and visited set
     fringe = util.PriorityQueue()
     closed = set()
 
     # set the initial state and add to fringe
     initial_state = problem.getStartState()
-    initial_actions = [] # an empty array, initially no actions have been performed
-    initial_cost = 0
-    fringe.update((initial_state, initial_actions), initial_cost) # ((x,y), [array of actions]) 
+    initial_actions = []
+    initial_priority = 0
+    fringe.update((initial_state, initial_actions), initial_priority)
 
     # loop 
     while True:
@@ -181,25 +177,26 @@ def uniformCostSearch(problem: SearchProblem):
         if fringe.isEmpty():
             return []
         
-        # get current state and path
+        # get current state, path, and cost
         (current_state, path) = fringe.pop()
 
         # check if our current state is the goal
-        if (problem.isGoalState(current_state)):
+        if problem.isGoalState(current_state):
             return path
 
-        # add this state to the closed note
+        # add this state to the closed note if not already explored
         if current_state not in closed:
             closed.add(current_state)
 
-        # push all successors of this state to the fringe
-        for successor, new_path, new_cost in problem.getSuccessors(current_state):
-            if successor not in closed:
-                successor_path = path + [new_path]
-                fringe.update((successor, (path + [new_path])), problem.getCostOfActions(path+[new_path]))
-                closed.add(successor)
+            # push all successors of this state to the fringe
+            for successor, new_path, new_cost in problem.getSuccessors(current_state):
+                if successor not in closed:
+                    successor_path = path + [new_path]
+                    successor_cost = problem.getCostOfActions(successor_path)
+                    # fringe update automatically accounts for cost.
+                    fringe.update((successor, successor_path), successor_cost)
     
-    util.raiseNotDefined()
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -210,8 +207,46 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # initialize queue and visited set
+    fringe = util.PriorityQueue()
+    closed = set()
+
+    # set the initial state and add to fringe
+    initial_state = problem.getStartState()
+    initial_actions = []
+    g_cost = 0  # Initial path cost
+    h_cost = heuristic(initial_state, problem)  # Initial heuristic estimate
+    f_cost = g_cost + h_cost  # f(n) = g(n) + h(n)
+    
+    fringe.update((initial_state, initial_actions), f_cost)
+
+    while True:
+        # check if all explored
+        if fringe.isEmpty():
+            return []
+        
+        # get current state, path, and cost
+        (current_state, path) = fringe.pop()
+
+        # check if our current state is the goal
+        if problem.isGoalState(current_state):
+            return path
+        
+        # add this state to the closed note if not already explored
+        if current_state not in closed:
+            closed.add(current_state)
+
+            # push all successors of this state to the fringe
+            for successor, action, step_cost in problem.getSuccessors(current_state):
+                if successor not in closed:
+                    successor_path = path + [action]
+                    g_cost = problem.getCostOfActions(successor_path)  # True cost to reach successor
+                    h_cost = heuristic(successor, problem)  # Heuristic estimate to goal
+                    f_cost = g_cost + h_cost  # Total cost f(n) = g(n) + h(n)
+                    
+                    fringe.update((successor, successor_path), f_cost)
+    
+    return []
 
 
 # Abbreviations
