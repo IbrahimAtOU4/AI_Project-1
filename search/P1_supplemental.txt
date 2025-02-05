@@ -1,32 +1,55 @@
-Answer questions marked as "QS"
-
 QS1.1:
-- For DFS, you implement it using a stack. This is because we want to follow the LIFO style,
-which explores nodes that are most recently added. this means that when you go down one level,
-then add a node, you will explore that node, then the one below it. first however, you expand the 
-both of the nodes children.
-
+- For DFS, we implement it using a stack. This is because we want to follow the LIFO style, 
+which explores nodes that are most recently added. this means that when we go down one level,
+ then add a node, we will explore that node, then the one below it. first however, we expand 
+ the both of the nodes children.
 
 QS1.2:
-
+- For DFS behavior, we go deep into a path before trying alternatives. This means when we reach
+ a fork, we completely explore one path before backtracking to try another. When pacman uses this,
+  it will find a valid path to the goal, but it might not be the shortest one because we don't consider
+   all possibilities before choosing a path.
 
 QS2.1:
-
+- For BFS, we implement it using a queue. This is because we want to follow the FIFO style, 
+which explores nodes in the order they were added. This means that when we add nodes to explore, 
+we check all nodes at the current depth before going deeper. This guarantees we'll find 
+the shortest path first because we explore everything level by level.
 
 QS3.1:
-
-
+- For UCS, we implement it using a priority queue. This is because we want to explore nodes based on their path cost.
+ This means that when we add nodes to explore, we'll always choose the one with the lowest total cost to reach it.
+  When pacman uses this, it ensures finding the cheapest path to the goal.
 
 QS4.1:
-
+- For A* search, we use different heuristics to guide the search. The nullHeuristic always returns 0, which makes A* behave just like UCS.
+ The manhattanHeuristic estimates the remaining distance to the goal. This means when using manhattanHeuristic, 
+ we explore paths that seem closer to the goal first, making the search faster while still finding the optimal path.
 
 QS5.1:
-
+- For CornersProblem, we implement the state using two pieces: pacman's position and which corners we've visited. 
+This is because we need to track both where we are and what we've accomplished. This means each state tells us exactly 
+where pacman is and which corners are left to visit.
 
 QS5.2:
-
+- For CornersProblem implementation, we track movement and corner visits. This means when pacman moves, 
+we check if the new position is a corner and mark it as visited if it is. When generating successors, 
+we look at all possible moves and keep the corner information updated. The goal is reached when all corners have been visited,
+ no matter what order we visit them in.
 
 QS6.1:
-
+- For corners heuristic, we calculate remaining work based on unvisited corners. 
+This is because we need an estimate that never overestimates the true cost. 
+This means looking at distances between current position and corners, and between corners themselves, 
+to figure out the minimum possible remaining distance.
 
 QS7.1:
+- For food heuristic, we implement it using maze distances to food dots. This is because we want to consider 
+actual paths through the maze, not just straight-line distances. This means calculating how far each remaining
+ food dot is through the maze and using the furthest one as our estimate. When pacman uses this, it finds optimal
+  paths while expanding fewer nodes.
+
+QS8.1:
+- For closest dot search, we implement it using a greedy approach with BFS. This is because we want to 
+always go to the nearest food dot first. This means pacman will find food quickly, but might take a longer 
+overall path than necessary. When there are multiple food dots, this can lead to backtracking that a more optimal solution would avoid.
